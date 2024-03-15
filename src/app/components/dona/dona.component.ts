@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import Chart, { ChartType } from 'chart.js/auto';
 
 
@@ -8,6 +8,8 @@ import Chart, { ChartType } from 'chart.js/auto';
   styles: ``
 })
 export class DonaComponent implements OnInit {
+
+  @Input() title: string = 'Sin titutlo';
 
   public chart: Chart | undefined;
   public hola: string[] = ['Download Sales', 'In-Store Sales', 'Mail-Order Sales'];
