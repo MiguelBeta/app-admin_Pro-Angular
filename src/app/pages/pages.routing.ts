@@ -8,6 +8,7 @@ import { Grafica1Component } from './grafica1/grafica1.component';
 import { LoginComponent } from '../auth/login/login.component';
 import { RegisterComponent } from '../auth/register/register.component';
 import { NopagefoundComponent } from '../nopagefound/nopagefound.component';
+import { AccountSettingsComponent } from './account-settings/account-settings.component';
 
 
 const routes: Routes = [
@@ -19,6 +20,8 @@ const routes: Routes = [
       { path: '', component: DashboardComponent },
       { path: 'progress',  component: ProgressComponent  },
       { path: 'grafica1',  component: Grafica1Component  },
+      { path: 'account-settings',  component: AccountSettingsComponent  },
+
     ]
   },
 ];
