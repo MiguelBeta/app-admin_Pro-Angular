@@ -1,16 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { UsuarioService } from '../../services/usuario.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { LoginForm } from '../../interfaces/login-form.interfaces';
+import { response } from 'express';
+
+declare const google: any;
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit, AfterViewInit {
+
+  @ViewChild('googleBtn') googleBtn!: ElementRef;
 
   // saber si se cargo el fomulario
   public formSubmitted = false;
@@ -24,6 +29,37 @@ export class LoginComponent {
   constructor(private router: Router,
     private fb: FormBuilder,
     private usuarioService: UsuarioService) { }
+
+
+  ngOnInit(): void {
+
+  }
+
+
+  ngAfterViewInit(): void {
+    this.googleInit();
+  }
+
+  googleInit(){
+    google.accounts.id.initialize({
+      client_id: '804648329905-reurg2q0hrhiv3tv38t6cb70lf022gm1.apps.googleusercontent.com',
+      callback: (response: any) => this.handleCredentialResponse(response)
+    });
+
+    google.accounts.id.renderButton(
+      // document.getElementById("buttonDiv"),
+      this.googleBtn.nativeElement,
+      { theme: "outline", size: "large" }  // customization attributes
+    );
+  }
+
+  handleCredentialResponse( response: any ){
+    console.log("Encoded JWT ID token: " + response.credential);
+    this.usuarioService.loginGoogle( response.credential )
+      .subscribe( resp => {
+        console.log({ login: resp });
+      })
+  }
 
 
 login() {
