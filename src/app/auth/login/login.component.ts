@@ -26,9 +26,9 @@ export class LoginComponent implements OnInit, AfterViewInit {
     remember: [false]
   });
 
-  constructor(private router: Router,
-    private fb: FormBuilder,
-    private usuarioService: UsuarioService) { }
+  constructor( private router: Router,
+               private fb: FormBuilder,
+               private usuarioService: UsuarioService) { }
 
 
   ngOnInit(): void {
@@ -54,10 +54,14 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   handleCredentialResponse( response: any ){
-    console.log("Encoded JWT ID token: " + response.credential);
+     console.log("Encoded JWT ID token: " + response.credential);
     this.usuarioService.loginGoogle( response.credential )
       .subscribe( resp => {
-        console.log({ login: resp });
+         console.log({ login: resp });
+
+         // Rediccionar
+         this.router.navigateByUrl('/');
+
       })
   }
 
@@ -84,6 +88,9 @@ login() {
         } else {
           localStorage.removeItem('email');
         }
+
+      // Navegar al Dashboard
+      this.router.navigateByUrl('/');
 
     }, (err) => {
       // Alert si sucede un error

@@ -28,6 +28,8 @@ export class RegisterComponent {
                private usuarioService: UsuarioService ){ }
 
   crearUsuario(){
+
+  // Formulario cargado
     this.formSubmitted = true;
     console.log( this.registerForm.value );
 
