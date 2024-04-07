@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, OnInit, NgZone } from '@angular/core';
 import { UsuarioService } from '../../services/usuario.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -7,6 +7,8 @@ import { LoginForm } from '../../interfaces/login-form.interfaces';
 import { response } from 'express';
 
 declare const google: any;
+// declare const gapi:any;
+
 
 @Component({
   selector: 'app-login',
@@ -19,6 +21,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
   // saber si se cargo el fomulario
   public formSubmitted = false;
+  // public auth2: any;
+
 
   public loginForm = this.fb.group({
     email: [ localStorage.getItem('email') || '', [Validators.required, Validators.email]],
@@ -28,7 +32,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
   constructor( private router: Router,
                private fb: FormBuilder,
-               private usuarioService: UsuarioService) { }
+               private usuarioService: UsuarioService,
+               private ngZone: NgZone ) { }
 
 
   ngOnInit(): void {
@@ -60,8 +65,9 @@ export class LoginComponent implements OnInit, AfterViewInit {
          console.log({ login: resp });
 
          // Rediccionar
-         this.router.navigateByUrl('/');
-
+         this.ngZone.run( () => {
+          this.router.navigateByUrl('/');
+        })
       })
   }
 
@@ -100,6 +106,7 @@ login() {
 
 
 }
+
 
 
 }
