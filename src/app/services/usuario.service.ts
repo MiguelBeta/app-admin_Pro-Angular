@@ -36,12 +36,23 @@ export class UsuarioService {
   }
 
   googleInit(){
+
+    // Estoo ***
+    return new Promise<void>( resolve => {
+    // ||
+
       gapi.load('auth2', () => {
       this.auth2 = gapi.auth2.init({
         client_id: '804648329905-reurg2q0hrhiv3tv38t6cb70lf022gm1.apps.googleusercontent.com',
         cookiepolicy: 'single_host_origin',
       });
+
+      resolve();
     });
+  // Estoo ***
+  })
+    // ||
+
   }
 
   logout(){

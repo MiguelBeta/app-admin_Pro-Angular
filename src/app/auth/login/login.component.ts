@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild, ElementRef, OnInit, NgZone } from '@angular/core';
+import { Component, AfterViewInit, OnInit, NgZone } from '@angular/core';
 import { UsuarioService } from '../../services/usuario.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -7,7 +7,7 @@ import { LoginForm } from '../../interfaces/login-form.interfaces';
 import { response } from 'express';
 
 declare const google: any;
-// declare const gapi:any;
+declare const gapi:any;
 
 
 @Component({
@@ -15,13 +15,13 @@ declare const google: any;
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit, AfterViewInit {
+export class LoginComponent implements OnInit {
 
-  @ViewChild('googleBtn') googleBtn!: ElementRef;
+  // @ViewChild('googleBtn') googleBtn!: ElementRef;
 
   // saber si se cargo el fomulario
   public formSubmitted = false;
-  // public auth2: any;
+  public auth2: any;
 
 
   public loginForm = this.fb.group({
@@ -37,39 +37,39 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit(): void {
-
+    this.renderButton();
   }
 
 
-  ngAfterViewInit(): void {
-    this.googleInit();
-  }
+  // ngAfterViewInit(): void {
+  //   this.googleInit();
+  // }
 
-  googleInit(){
-    google.accounts.id.initialize({
-      client_id: '804648329905-reurg2q0hrhiv3tv38t6cb70lf022gm1.apps.googleusercontent.com',
-      callback: (response: any) => this.handleCredentialResponse(response)
-    });
+  // googleInit(){
+  //   google.accounts.id.initialize({
+  //     client_id: '804648329905-reurg2q0hrhiv3tv38t6cb70lf022gm1.apps.googleusercontent.com',
+  //     callback: (response: any) => this.handleCredentialResponse(response)
+  //   });
 
-    google.accounts.id.renderButton(
-      // document.getElementById("buttonDiv"),
-      this.googleBtn.nativeElement,
-      { theme: "outline", size: "large" }  // customization attributes
-    );
-  }
+  //   google.accounts.id.renderButton(
+  //     // document.getElementById("buttonDiv"),
+  //     this.googleBtn.nativeElement,
+  //     { theme: "outline", size: "large" }  // customization attributes
+  //   );
+  // }
 
-  handleCredentialResponse( response: any ){
-     console.log("Encoded JWT ID token: " + response.credential);
-    this.usuarioService.loginGoogle( response.credential )
-      .subscribe( resp => {
-         console.log({ login: resp });
+  // handleCredentialResponse( response: any ){
+  //    console.log("Encoded JWT ID token: " + response.credential);
+  //   this.usuarioService.loginGoogle( response.credential )
+  //     .subscribe( resp => {
+  //        console.log({ login: resp });
 
-         // Rediccionar
-         this.ngZone.run( () => {
-          this.router.navigateByUrl('/');
-        })
-      })
-  }
+  //        // Rediccionar
+  //        this.ngZone.run( () => {
+  //         this.router.navigateByUrl('/');
+  //       })
+  //     })
+  // }
 
 
 login() {
@@ -107,6 +107,51 @@ login() {
 
 }
 
+renderButton() {
+  gapi.signin2.render('my-signin2', {
+    'scope': 'profile email',
+    'width': 240,
+    'height': 50,
+    'longtitle': true,
+    'theme': 'dark',
+  });
+
+  this.startApp();
+
+}
+
+async startApp() {
+
+  await this.usuarioService.googleInit();
+  this.auth2 = this.usuarioService.auth2;
+
+  this.attachSignin( document.getElementById('my-signin2') );
+
+};
+
+attachSignin( element: HTMLElement | null ) {
+
+  if (!element) {
+    console.error("Element with ID 'my-signin2' not found.");
+    return;
+  }
+
+  this.auth2.attachClickHandler( element, {},
+      ( googleUser: any ) => {
+          const id_token = googleUser.getAuthResponse().id_token;
+          // console.log(id_token);
+          this.usuarioService.loginGoogle( id_token )
+            .subscribe( resp => {
+              // Navegar al Dashboard
+              this.ngZone.run( () => {
+                this.router.navigateByUrl('/');
+              })
+            });
+
+      }, ( error: any ) => {
+          alert(JSON.stringify(error, undefined, 2));
+      });
+}
 
 
 }
