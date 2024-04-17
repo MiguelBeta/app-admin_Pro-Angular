@@ -37,9 +37,7 @@ export class UsuarioService {
 
   googleInit(){
 
-    // Estoo ***
     return new Promise<void>( resolve => {
-    // ||
 
       gapi.load('auth2', () => {
       this.auth2 = gapi.auth2.init({
@@ -49,9 +47,7 @@ export class UsuarioService {
 
       resolve();
     });
-  // Estoo ***
   })
-    // ||
 
   }
 

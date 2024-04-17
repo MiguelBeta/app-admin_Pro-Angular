@@ -41,36 +41,6 @@ export class LoginComponent implements OnInit {
   }
 
 
-  // ngAfterViewInit(): void {
-  //   this.googleInit();
-  // }
-
-  // googleInit(){
-  //   google.accounts.id.initialize({
-  //     client_id: '804648329905-reurg2q0hrhiv3tv38t6cb70lf022gm1.apps.googleusercontent.com',
-  //     callback: (response: any) => this.handleCredentialResponse(response)
-  //   });
-
-  //   google.accounts.id.renderButton(
-  //     // document.getElementById("buttonDiv"),
-  //     this.googleBtn.nativeElement,
-  //     { theme: "outline", size: "large" }  // customization attributes
-  //   );
-  // }
-
-  // handleCredentialResponse( response: any ){
-  //    console.log("Encoded JWT ID token: " + response.credential);
-  //   this.usuarioService.loginGoogle( response.credential )
-  //     .subscribe( resp => {
-  //        console.log({ login: resp });
-
-  //        // Rediccionar
-  //        this.ngZone.run( () => {
-  //         this.router.navigateByUrl('/');
-  //       })
-  //     })
-  // }
-
 
 login() {
 
