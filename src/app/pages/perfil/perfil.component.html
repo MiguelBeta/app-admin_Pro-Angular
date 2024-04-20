@@ -49,14 +49,27 @@
         <h4 class="card-title"> Imagen </h4>
         <h6 class="card-subtitle"> Imagen del usuario </h6>
 
-        <img src="">
+        <div class="text-center" >
+          <img *ngIf="!imgTemp" [src]="usuario?.imagenUrl" class="img-avatar">
+          <img *ngIf="imgTemp" [src]="imgTemp" class="img-avatar">
 
-        <input type="file">
+        </div>
 
         <br>
         <br>
 
-        <button type="button" class="btn btn-success waves-effect waves-light m-r-10">
+
+
+        <input type="file"
+               (change)="cambiarImagen( $event )">
+
+        <br>
+        <br>
+
+        <button type="button"
+                class="btn btn-success waves-effect waves-light m-r-10"
+                [disabled]="!imagenSubir"
+                (click)="subirImagen()">
           <i class="fa fa-save"></i>
           Guardar Imagen
         </button>
