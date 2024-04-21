@@ -7,8 +7,9 @@ import { environment } from '../../environment.ts/environmet';
 
 import { RegisterForm } from '../interfaces/register-form.interfaces';
 import { LoginForm } from '../interfaces/login-form.interfaces';
+import { CargarUsuario } from '../interfaces/cargar-usuarios.interfaces';
 import { Observable, of } from 'rxjs';
-import { error } from 'node:console';
+// import { error } from 'node:console';
 
 import { Usuario } from '../models/usuario.model';
 
@@ -44,6 +45,14 @@ export class UsuarioService {
 
   get uid(): string{
     return this.usuario?.uid || '';
+  }
+
+  get headers(){
+    return {
+      headers: {
+      'x-token': this.token
+      }
+    }
   }
 
   googleInit(){
@@ -158,5 +167,10 @@ export class UsuarioService {
         })
       )
   }
+
+  cargarUsuarios( desde: number = 0 ){
+    const url = `${ base_url }/usuarios?/desde${ desde }`;
+    return this.http.get<CargarUsuario>( url, this.headers );
+    }
 
 }
