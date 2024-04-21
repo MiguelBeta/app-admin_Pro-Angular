@@ -96,14 +96,16 @@ export class PerfilComponent implements OnInit {
           if (this.usuario) {
             this.usuario.img = img
             Swal.fire('Actualizado', 'La imagen fue actualizada', 'success');
-
             }
           }
-        );
+        ).catch(err => {
+          console.log(err);
+          Swal.fire('Error', 'No se pudo subir la imagen', 'error');
+
+        });
 
     } else {
       console.log('No se ha seleccionado ninguna imagen.');
-      Swal.fire('Error', 'no se ha seleccionado ninguna imagen', 'error');
 
     }
   }
