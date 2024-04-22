@@ -169,6 +169,8 @@ export class UsuarioService {
   }
 
   cargarUsuarios( desde: number = 0 ){
+    // Ruta de la peticion http para cargar usuarios
+
     const url = `${base_url }/usuarios?desde=${desde}`;
     return this.http.get<CargarUsuario>( url, this.headers )
                .pipe(
@@ -182,6 +184,14 @@ export class UsuarioService {
                     };
                   })
                 )
-    }
+  }
+
+  eliminarUsuario( usuario: Usuario ){
+    // Ruta de la peticion http para eliminar usuarios
+    const url = `${ base_url }/usuarios/${ usuario.uid }`;
+    return this.http.delete( url, this.headers );
+
+
+  }
 
 }

@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import Swal from 'sweetalert2';
+
 import { UsuarioService } from '../../../services/usuario.service';
+import { BusquedasService } from '../../../services/busquedas.service';
 import { Usuario } from '../../../models/usuario.model';
+import { Icon } from '@material-ui/core';
 
 @Component({
   selector: 'app-usuarios',
@@ -11,10 +15,13 @@ export class UsuariosComponent implements OnInit{
 
   public totalUsuarios: number = 0;
   public usuarios: Usuario[] = [];
+  public usuariosTemp: Usuario[] = [];
   public desde: number = 0;
   public cargando: boolean = true;
 
-  constructor( private usuarioService: UsuarioService ){ }
+
+  constructor( private usuarioService: UsuarioService,
+               private busquedasService: BusquedasService ){ }
 
   ngOnInit(): void {
     this.cargarUsuarios();
@@ -26,20 +33,76 @@ export class UsuariosComponent implements OnInit{
       .subscribe( ({ total, usuarios }) => {
         this.totalUsuarios = total;
         this.usuarios = usuarios;
+        this.usuariosTemp = usuarios;
         this.cargando = false;
+
     });
   }
 
   cambiarPagina( valor: number ){
-    this.desde += valor;
+    const nuevaDesde = this.desde + valor;
+    // this.desde += valor;
 
-    if( this.desde < 0 ){
-      this.desde = 0;
-    } else if( this.desde >= this.totalUsuarios ){
-      this.desde -= valor;
+    // if( this.desde < 0 ){
+    //   this.desde = 0;
+    // } else if( this.desde >= this.totalUsuarios ){
+    //   this.desde -= valor;
+    // }
+
+    if ( nuevaDesde >= 0 && nuevaDesde < this.totalUsuarios ){
+      this.desde = nuevaDesde;
+      this.cargarUsuarios();
     }
 
-    this.cargarUsuarios();
+    // return;
+
+    // this.cargarUsuarios();
+  }
+
+  buscar( termino: string ){
+
+    if( termino.length === 0 ){
+      return this.usuarios = this.usuariosTemp;
+    }
+
+    this.busquedasService.buscar( 'usuarios', termino )
+        .subscribe( resp => {
+          this.usuarios = resp;
+        });
+    return;
+
+  }
+
+  eliminarUsuario( usuario:Usuario ){
+
+    if( usuario.uid === this.usuarioService.uid ){
+      return Swal.fire( 'Error', 'No puede borrar su propio usuario', 'error' );
+    }
+
+    Swal.fire({
+      title: "¿Borrar usuario?",
+      text: `Esta apunto de borrar a ${ usuario.nombre }`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Si, eliminar usuario"
+    }).then((result) => {
+      if (result.isConfirmed) {
+
+        this.usuarioService.eliminarUsuario( usuario )
+          .subscribe( resp => {
+
+            this.cargarUsuarios();
+            Swal.fire(
+                'Usuario borrado',
+                `${ usuario.nombre } fue eliminado correctamente`,
+                 "success"
+              );
+          })
+      }
+    });
+
+    return;
+
   }
 
 }

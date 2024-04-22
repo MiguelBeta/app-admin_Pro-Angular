@@ -3,7 +3,11 @@
     <div class="card">
       <div class="card-body">
 
-        <input type="text" class="form-control" placeholder="Buscar usuario..." />
+        <input type="text"
+               class="form-control"
+               placeholder="Buscar usuario..."
+               (keyup)="buscar( txtTermino.value)"
+               #txtTermino/>
 
       </div>
     </div>
@@ -29,7 +33,7 @@
   <div class="col-12">
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">Total de usuarios ({{ totalUsuarios }}) - {{ desde }} </h4>
+        <h4 class="card-title">Total de usuarios: {{ totalUsuarios }} - {{ desde }} </h4>
         <h6 class="card-subtitle">Usuarios Registrados</h6>
         <div class="table-responsive">
           <table class="table table-striped">
@@ -62,7 +66,14 @@
 
                 <td class="text-nowrap text-center">
                   <a href="#" data-toggle="tooltip" data-original-title="Editar"> <i class="fa fa-pencil text-inverse m-r-10"></i> </a>
-                  <a href="#" data-toggle="tooltip" data-original-title="Borrar"> <i class="fa fa-close text-danger"></i></a>
+
+                  <a data-toggle="tooltip"
+                     data-original-title="Borrar"
+                     (click)="eliminarUsuario(usuario)">
+                    <i class="fa fa-close text-danger">
+
+                    </i>
+                  </a>
                 </td>
               </tr>
 
@@ -70,9 +81,12 @@
           </table>
         </div>
 
-        <button (click)="cambiarPagina(-5)" class="btn btn-secondary">Anteriores</button>
-        &nbsp;
-        <button (click)="cambiarPagina(+5)" class="btn btn-secondary">Siguientes</button>
+        <div *ngIf="txtTermino.value.length === 0" >
+          <button (click)="cambiarPagina(-5)" class="btn btn-secondary">Anteriores</button>
+          &nbsp;
+          <button (click)="cambiarPagina(+5)" class="btn btn-secondary">Siguientes</button>
+        </div>
+
 
       </div>
     </div>
