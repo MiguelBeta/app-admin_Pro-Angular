@@ -194,4 +194,13 @@ export class UsuarioService {
 
   }
 
+  guardarUsuario( usuario: Usuario ){
+
+    return this.http.put(`${ base_url }/usuarios/${ usuario.uid }`, usuario, {
+      headers: {
+      'x-token': this.token
+      }
+    });
+
+  }
 }

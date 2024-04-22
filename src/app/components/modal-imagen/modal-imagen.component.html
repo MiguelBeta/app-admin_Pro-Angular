@@ -1,0 +1,73 @@
+<div class="fondo-modal-imagen animated fadeIn fast"
+     [class.oculto]="modalImagenService.ocultarModal">
+  <div class="modal fade show"
+       id="exampleModal"
+       tabindex="-1"
+       role="dialog"
+       aria-labelledby="exampleModalLabel1"
+       style="display: block;">
+
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel1">Cargar Imagen</h4>
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                        (click)="cerrarModal()">
+                        <span
+                          aria-hidden="true">×
+                        </span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+              <h3>Seleccione una imagen</h3>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-default"
+                        data-dismiss="modal"
+                        (click)="cerrarModal()">
+                        Cancelar
+                </button>
+                <button type="button" class="btn btn-primary">Actualizar imagen</button>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<!--
+<div class="modal fade show" id="responsiveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1"
+  style="display: block;">
+
+
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Cargar imagen</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      </div>
+      <div class="modal-body">
+
+        <h3>Seleccione una imagen</h3>
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger waves-effect waves-light">Actualizar Foto</button>
+      </div>
+    </div>
+  </div>
+</div> -->
