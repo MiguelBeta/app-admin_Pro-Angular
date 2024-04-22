@@ -1,14 +1,14 @@
 import { Injectable, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, tap } from "rxjs/operators";
 import { Router } from '@angular/router';
 
-import { environment } from '../../environment.ts/environmet';
+import { catchError, map, tap } from "rxjs/operators";
+import { Observable, of } from 'rxjs';
 
+import { environment } from '../../environment.ts/environmet';
 import { RegisterForm } from '../interfaces/register-form.interfaces';
 import { LoginForm } from '../interfaces/login-form.interfaces';
 import { CargarUsuario } from '../interfaces/cargar-usuarios.interfaces';
-import { Observable, of } from 'rxjs';
 // import { error } from 'node:console';
 
 import { Usuario } from '../models/usuario.model';
@@ -169,8 +169,19 @@ export class UsuarioService {
   }
 
   cargarUsuarios( desde: number = 0 ){
-    const url = `${ base_url }/usuarios?/desde${ desde }`;
-    return this.http.get<CargarUsuario>( url, this.headers );
+    const url = `${base_url }/usuarios?desde=${desde}`;
+    return this.http.get<CargarUsuario>( url, this.headers )
+               .pipe(
+                 map( resp => {
+                  const usuarios = resp.usuarios.map(
+                      user => new Usuario( user.nombre, user.email, '', user.img, user.google, user.role, user.uid )
+                    );
+                    return {
+                      total: resp.total,
+                      usuarios
+                    };
+                  })
+                )
     }
 
 }
