@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import Swal from 'sweetalert2';
+import { Subscription } from 'rxjs';
 
 import { Usuario } from '../../../models/usuario.model';
 
@@ -13,21 +14,34 @@ import { ModalImagenService } from '../../../services/modal-imagen.service';
   templateUrl: './usuarios.component.html',
   styles: ``
 })
-export class UsuariosComponent implements OnInit{
+export class UsuariosComponent implements OnInit, OnDestroy{
 
   public totalUsuarios: number = 0;
   public usuarios: Usuario[] = [];
   public usuariosTemp: Usuario[] = [];
+
+  public imgSubs: Subscription;
   public desde: number = 0;
   public cargando: boolean = true;
 
 
   constructor( private usuarioService: UsuarioService,
                private busquedasService: BusquedasService,
-               private modalImagenService: ModalImagenService ){ }
+               private modalImagenService: ModalImagenService ){
+
+
+                this.imgSubs = new Subscription();
+              }
+
+  ngOnDestroy(): void {
+    this.imgSubs.unsubscribe();
+  }
 
   ngOnInit(): void {
     this.cargarUsuarios();
+
+    this.imgSubs = this.modalImagenService.nuevaImagen
+      .subscribe( img => this.cargarUsuarios() );
   }
 
   cargarUsuarios(){
@@ -118,8 +132,12 @@ export class UsuariosComponent implements OnInit{
   }
 
   abrirModal( usuario: Usuario){
-    console.log( usuario );
-    this.modalImagenService.abrirModal();
+    console.log(usuario);
+    if (usuario.imagenUrl && usuario.uid) {
+      this.modalImagenService.abrirModal('usuarios', usuario.uid, usuario.imagenUrl);
+    } else {
+      console.error('La URL de la imagen es undefined');
+    }
 
   }
 
