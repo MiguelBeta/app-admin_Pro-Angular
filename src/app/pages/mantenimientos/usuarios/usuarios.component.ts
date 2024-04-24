@@ -7,7 +7,6 @@ import { Usuario } from '../../../models/usuario.model';
 import { UsuarioService } from '../../../services/usuario.service';
 import { BusquedasService } from '../../../services/busquedas.service';
 import { ModalImagenService } from '../../../services/modal-imagen.service';
-// import { Icon } from '@material-ui/core';
 
 @Component({
   selector: 'app-usuarios',
@@ -84,7 +83,8 @@ export class UsuariosComponent implements OnInit, OnDestroy{
 
     this.busquedasService.buscar( 'usuarios', termino )
         .subscribe( resp => {
-          this.usuarios = resp;
+          this.usuarios = resp.filter( item => item instanceof Usuario ) as Usuario[];
+
         });
     return;
 

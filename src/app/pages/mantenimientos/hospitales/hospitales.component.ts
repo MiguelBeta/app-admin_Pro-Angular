@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import Swal from 'sweetalert2';
+import { Subscription } from 'rxjs';
+
+import { Hospital } from '../../../models/hospital.model';
 
 import { HospitalService } from '../../../services/hospital.service';
-import { Hospital } from '../../../models/hospital.model';
+import { BusquedasService } from '../../../services/busquedas.service';
 import { ModalImagenService } from '../../../services/modal-imagen.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-hospitales',
@@ -19,7 +21,8 @@ export class HospitalesComponent implements OnInit{
 
 
   constructor( private hospitalService: HospitalService,
-               private modalImagenService: ModalImagenService ){
+               private modalImagenService: ModalImagenService,
+               private busquedasService: BusquedasService ){
 
                 this.imgSubs = new Subscription();
               }
@@ -30,6 +33,20 @@ export class HospitalesComponent implements OnInit{
 
     this.imgSubs = this.imgSubs = this.modalImagenService.nuevaImagen
     .subscribe( img => this.cargarHospitales() );
+  }
+
+  buscar( termino: string ){
+
+    if( termino.length === 0 ){
+      return this.cargarHospitales();
+    }
+
+    this.busquedasService.buscar( 'hospitales', termino )
+        .subscribe( resp => {
+          // this.hospitales = resp;
+          this.hospitales = resp.filter( item => item instanceof Hospital ) as Hospital[];
+          // this.hospitales = resp.filter( item => item ) as Hospital[];
+        });
   }
 
   cargarHospitales(){
@@ -74,7 +91,6 @@ export class HospitalesComponent implements OnInit{
 
         });
     }
-      // Swal.fire(`Entered URL: ${url}`);
 
   }
 
