@@ -7,6 +7,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ComponentsModule } from './../components/components.module';
 import { SharedModule } from '../shared/shared.module';
 
+import { PipesModule } from '../pipes/pipes.module';
+
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProgressComponent } from './progress/progress.component';
 import { Grafica1Component } from './grafica1/grafica1.component';
@@ -50,6 +52,7 @@ import { MedicosComponent } from './mantenimientos/medicos/medicos.component';
     SharedModule,
     RouterModule,
     ComponentsModule,
+    PipesModule,
   ]
 })
 export class PagesModule { }
