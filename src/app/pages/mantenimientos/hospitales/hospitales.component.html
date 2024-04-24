@@ -37,7 +37,8 @@
 
           <div class="col">
             <div class="text-right">
-              <button class="btn btn-primary">
+              <button class="btn btn-primary"
+                      (click)="abrirSweetAlert()">
                 <i class="fa fa-hospital-o"></i>
                 Crear hospital
               </button>
@@ -53,14 +54,16 @@
               <tr>
                 <th class="w100">Foto</th>
                 <th>Nombre</th>
-                <th class="text-nowrap">Acciones</th>
+                <th class=" w100 text-nowrap">Acciones</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let hospital of hospitales">
                 <td class="text-center">
-                  <img [src]=" hospital.img ? (hospital.img | imagen: 'hospitales') : '' " alt="hospital.nombre"
-                    class="avatar cursor">
+                  <img [src]=" hospital.img ? (hospital.img | imagen: 'hospitales') : '' "
+                        alt="hospital.nombre"
+                        class="avatar cursor"
+                        (click)="abrirModal( hospital )">
                 </td>
                 <td>
                   <input type="text" class="form-control" placeholder="Nombre del hospital"
@@ -68,10 +71,17 @@
                 </td>
 
                 <td class="text-nowrap text-center">
-                  <a href="#" data-toggle="tooltip" data-original-title="Guardar Cambios"> <i
-                      class="fa fa-pencil text-inverse m-r-10"></i> </a>
-                  <a href="#" data-toggle="tooltip" data-original-title="Borrar"> <i
-                      class="fa fa-close text-danger"></i>
+                  <a (click)="guardarCambios(hospital)"
+                     data-toggle="tooltip"
+                     class="cursor"
+                     data-original-title="Guardar Cambios">
+                     <i class="fa fa-pencil text-inverse m-r-10"></i>
+                  </a>
+                  <a (click)="eliminarHospital( hospital )"
+                     data-toggle="tooltip"
+                     class="cursor"
+                     data-original-title="Borrar">
+                     <i class="fa fa-close text-danger"></i>
                   </a>
                 </td>
               </tr>
