@@ -39,7 +39,7 @@ const routes: Routes = [
       { path: 'usuarios',          component: UsuariosComponent, data: { titulo: 'Mantenimiento de Usuarios' }  },
       { path: 'hospitales',        component: HospitalesComponent, data: { titulo: 'Mantenimiento de Hospitales' }  },
       { path: 'medicos',           component: MedicosComponent, data: { titulo: 'Mantenimiento de Medicos' }  },
-      { path: 'medicos/:id',       component: MedicoComponent, data: { titulo: 'Mantenimiento de Medicos' }  },
+      { path: 'medico/:id',       component: MedicoComponent, data: { titulo: 'Mantenimiento de Medicos' }  },
 
 
 
