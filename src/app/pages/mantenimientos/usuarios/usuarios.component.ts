@@ -19,7 +19,7 @@ export class UsuariosComponent implements OnInit, OnDestroy{
   public usuarios: Usuario[] = [];
   public usuariosTemp: Usuario[] = [];
 
-  public imgSubs: Subscription;
+  public imgSubs!: Subscription;
   public desde: number = 0;
   public cargando: boolean = true;
 
@@ -29,7 +29,7 @@ export class UsuariosComponent implements OnInit, OnDestroy{
                private modalImagenService: ModalImagenService ){
 
 
-                this.imgSubs = new Subscription();
+                // this.imgSubs = new Subscription();
               }
 
   ngOnDestroy(): void {

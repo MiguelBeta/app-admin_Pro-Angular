@@ -17,7 +17,7 @@ export class MedicosComponent implements OnInit, OnDestroy {
 
   public cargando: boolean = true;
   public medicos: Medico[] = [];
-  public imgSubs: Subscription;
+  public imgSubs!: Subscription;
 
 
 
@@ -25,7 +25,7 @@ export class MedicosComponent implements OnInit, OnDestroy {
                private modalImagenService: ModalImagenService,
                private busquedasService: BusquedasService ) {
 
-              this.imgSubs = new Subscription();
+              // this.imgSubs = new Subscription();
 
               }
 

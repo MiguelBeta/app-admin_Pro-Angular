@@ -17,14 +17,14 @@ export class HospitalesComponent implements OnInit, OnDestroy {
 
   public hospitales: Hospital[] = [];
   public cargando: boolean = true;
-  public imgSubs: Subscription;
+  public imgSubs!: Subscription;
 
 
   constructor(private hospitalService: HospitalService,
     private modalImagenService: ModalImagenService,
     private busquedasService: BusquedasService) {
 
-    this.imgSubs = new Subscription();
+    // this.imgSubs = new Subscription();
   }
 
   ngOnDestroy(): void {
