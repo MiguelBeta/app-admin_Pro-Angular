@@ -8,6 +8,7 @@ import { Medico } from '../../../models/medico.model';
 
 import { HospitalService } from '../../../services/hospital.service';
 import { MedicoService } from '../../../services/medico.service';
+import { delay } from 'rxjs';
 
 @Component({
   selector: 'app-medico',
@@ -73,7 +74,11 @@ export class MedicoComponent implements OnInit{
     }
 
     this.medicoService.obtenerMedicoPorId( id )
+    // .pipe(
+    //   delay(100)
+    //  )
       .subscribe( medico => {
+
 
         if ( !medico  ){
           this.router.navigateByUrl(`/dashboard/medicos`);
@@ -109,7 +114,6 @@ export class MedicoComponent implements OnInit{
       }
       this.medicoService.actualizarMedico( data )
         .subscribe( resp => {
-          console.log( resp );
           Swal.fire( 'Actualizado', `${ nombre } actualizado exitosamente`, 'success' );
         });
 
@@ -118,7 +122,6 @@ export class MedicoComponent implements OnInit{
 
       this.medicoService.crearMedico( this.medicoForm.value )
         .subscribe (( resp: any ) => {
-          console.log(resp);
           Swal.fire( 'Creado', `${ nombre } creado exitosamente`, 'success' );
           this.router.navigateByUrl(`/dashboard/medico/${ resp.medico._id }`);
         })
