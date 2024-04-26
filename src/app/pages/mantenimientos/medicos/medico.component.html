@@ -10,12 +10,13 @@
               [formGroup]="medicoForm"
               (submit)="guardarMedico()">
 
-          <div class="form-group row">
+          <div class="form-group row"
+               *ngIf="medicolSeleccionado">
             <label for="exampleInputuname3" class="col-sm-3 control-label">Foto</label>
             <div class="col-sm-9">
               <div class="input-group">
-                <img src="http://localhost:3000/api/upload/medicos/1010390c-e37f-4c7a-b988-f223eb3ae874.jpg" alt=""
-                  class="w200">
+                <img [src]="medicolSeleccionado.img ?? '' | imagen:'hospitales' "
+                class="w200"/>
               </div>
             </div>
           </div>

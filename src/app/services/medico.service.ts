@@ -12,50 +12,62 @@ const base_url = environment.base_url;
 })
 export class MedicoService {
 
-  constructor( private http: HttpClient ) { }
+  constructor(private http: HttpClient) { }
 
   get token(): string {
     return localStorage.getItem('token') || '';
   }
 
 
-  get headers(){
+  get headers() {
     return {
       headers: {
-      'x-token': this.token
+        'x-token': this.token
       }
     }
   }
 
-  cargarMedicos(){
+  // Carga la info mel medico seleccionado
+  cargarMedico() {
 
     // Ruta de la peticion http para cargar usuarios
-    const url = `${ base_url }/medicos`;
+    const url = `${base_url}/medicos`;
     return this.http.get<{ ok: boolean, medicos: Medico[] }>(url, this.headers)
-              .pipe(
-                map( (resp) => resp.medicos)
-              );
+      .pipe(
+        map((resp) => resp.medicos)
+      );
   }
 
-  crearMedicos( medicos: Medico ){
+  obtenerMedicoPorId( id:string ) {
+    // Ruta de la peticion http para cargar usuarios
+    const url = `${base_url}/medicos/${ id }`;
+    return this.http.get<{ ok: boolean, medico: Medico }>(url, this.headers)
+      .pipe(
+        map((resp) => resp.medico)
+      );
+  }
+
+  //crearMedicos( medicos: Medico ){
+  crearMedico(medico: { nombre: string, hospital: string }) {
+
 
     // Ruta de la peticion http para cargar usuarios
-    const url = `${ base_url }/medicos`;
+    const url = `${base_url}/medicos`;
     // Crea el hospital con el nombre que se asigne
-    return this.http.post(url, medicos, this.headers);
+    return this.http.post(url, medico, this.headers);
   }
 
-  actualizarMedicos( medico: Medico ){
+  actualizarMedico(medico: Medico) {
     // Ruta de la peticion http para cargar usuarios
-    const url = `${ base_url }/medicos/${ medico._id }`;
+    const url = `${base_url}/medicos/${medico._id}`;
     // Actualiza el hospital con el nombre que se asigne
     return this.http.put(url, medico, this.headers);
   }
 
-  borrarMedicos( _id: string ){
+  borrarMedico(_id: string) {
     // Ruta de la peticion http para cargar usuarios
-    const url = `${ base_url }/medicos/${ _id }`;
+    const url = `${base_url}/medicos/${_id}`;
     // Borra el hospital con el el id
-    return this.http.delete(url, this.headers );
+    return this.http.delete(url, this.headers);
   }
 }

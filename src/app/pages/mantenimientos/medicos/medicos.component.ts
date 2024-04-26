@@ -43,7 +43,7 @@ export class MedicosComponent implements OnInit, OnDestroy {
 
   cargarMedicos() {
     this.cargando = true;
-    this.medicoService.cargarMedicos()
+    this.medicoService.cargarMedico()
       .subscribe(medicos => {
         this.cargando = false;
         this.medicos = medicos;
@@ -86,7 +86,7 @@ export class MedicosComponent implements OnInit, OnDestroy {
     }).then((result) => {
       if (result.isConfirmed) {
 
-        this.medicoService.borrarMedicos( medico._id )
+        this.medicoService.borrarMedico( medico._id )
           .subscribe( resp => {
 
             this.cargarMedicos();
