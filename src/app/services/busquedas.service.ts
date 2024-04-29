@@ -52,7 +52,7 @@ export class BusquedasService {
 
   busquedaGlobal( termino: string){
     // http://localhost:3000/api/todo/a
-    const url = `${base_url }/todo/${ termino }`;
+    const url = `${ base_url }/todo/${ termino }`;
     return this.http.get( url, this.headers );
   }
 

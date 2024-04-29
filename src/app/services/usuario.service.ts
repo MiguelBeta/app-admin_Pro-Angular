@@ -29,9 +29,9 @@ export class UsuarioService {
   private isAuth2Initialized: boolean = false;
   public usuario?: Usuario;
 
-  constructor( private http: HttpClient,
-               private router: Router,
-               private ngZone: NgZone ) {
+  constructor(private http: HttpClient,
+    private router: Router,
+    private ngZone: NgZone) {
 
     document.addEventListener('DOMContentLoaded', () => {
       this.googleInit();
@@ -43,41 +43,49 @@ export class UsuarioService {
     return localStorage.getItem('token') || '';
   }
 
-  get uid(): string{
+  get uid(): string {
     return this.usuario?.uid || '';
   }
 
-  get headers(){
+  get headers() {
     return {
       headers: {
-      'x-token': this.token
+        'x-token': this.token
       }
     }
   }
 
-  googleInit(){
+  googleInit() {
 
-    return new Promise<void>( resolve => {
+    return new Promise<void>(resolve => {
 
       gapi.load('auth2', () => {
-      this.auth2 = gapi.auth2.init({
-        client_id: '804648329905-reurg2q0hrhiv3tv38t6cb70lf022gm1.apps.googleusercontent.com',
-        cookiepolicy: 'single_host_origin',
-      });
+        this.auth2 = gapi.auth2.init({
+          client_id: '804648329905-reurg2q0hrhiv3tv38t6cb70lf022gm1.apps.googleusercontent.com',
+          cookiepolicy: 'single_host_origin',
+        });
 
-      resolve();
-    });
-  })
+        resolve();
+      });
+    })
 
   }
 
-  logout(){
+  guardarLocalStorage(token: string, menu: any) {
+
+    localStorage.setItem('token', token);
+    // Mostrar el menu
+    localStorage.setItem('menu', JSON.stringify(menu));
+  }
+
+  logout() {
 
     localStorage.removeItem('token');
+    localStorage.removeItem('menu');
 
-    this.auth2.signOut().then( () => {
+    this.auth2.signOut().then(() => {
 
-      this.ngZone.run( () => {
+      this.ngZone.run(() => {
         this.router.navigateByUrl('/login');
       })
     });
@@ -99,106 +107,114 @@ export class UsuarioService {
 
   // }
 
-  validarToken(): Observable <boolean> {
+  validarToken(): Observable<boolean> {
     // const token = localStorage.getItem('token') || '';
 
-    return this.http.get(`${ base_url }/login/renew`, {
+    return this.http.get(`${base_url}/login/renew`, {
       headers: {
         'x-token': this.token
       }
     }).pipe(
-      map ( (resp: any) => {
+      map((resp: any) => {
         const { email, google, nombre, role, img = '', uid } = resp.usuario;
-        this.usuario = new Usuario( nombre, email, '', img, google, role, uid );
-        localStorage.setItem( 'token', resp.token );
+        this.usuario = new Usuario(nombre, email, '', img, google, role, uid);
+
+        this.guardarLocalStorage( resp.token, resp.menu );
+
         return true;
       }),
-      catchError( error => of(false) )
-      );
+      catchError(error => of(false))
+    );
 
   }
 
-  creandoUsuario( formData: RegisterForm ){
+  creandoUsuario(formData: RegisterForm) {
 
     // peticion http tipo post
-    return this.http.post(`${ base_url }/usuarios`, formData )
-              .pipe(
-                tap( ( resp: any ) => {
-                  localStorage.setItem('token', resp.token)
-                })
-              )
+    return this.http.post(`${base_url}/usuarios`, formData)
+      .pipe(
+        tap((resp: any) => {
+
+        this.guardarLocalStorage( resp.token, resp.menu );
+
+        })
+      )
 
   }
 
-  actualizarPerfil( data: { email: string, nombre: string, role: string } ){
+  actualizarPerfil(data: { email: string, nombre: string, role: string }) {
 
     data = {
       ...data,
       role: this.usuario?.role ?? ''
     }
 
-    return this.http.put(`${ base_url }/usuarios/${ this.uid }`, data, {
+    return this.http.put(`${base_url}/usuarios/${this.uid}`, data, {
       headers: {
-      'x-token': this.token
+        'x-token': this.token
       }
     });
 
 
   }
 
-  login( formData: LoginForm ){
+  login(formData: LoginForm) {
 
     // peticion http tipo post
-    return this.http.post(`${ base_url }/login`, formData )
-               .pipe(
-                  tap( ( resp: any ) => {
-                    localStorage.setItem('token', resp.token)
-                  })
-                )
+    return this.http.post(`${base_url}/login`, formData)
+      .pipe(
+        tap((resp: any) => {
+
+        this.guardarLocalStorage( resp.token, resp.menu );
+
+        })
+      )
 
   }
 
-  loginGoogle( token: string ){
-    return this.http.post(`${ base_url }/login/google`, { token })
+  loginGoogle(token: string) {
+    return this.http.post(`${base_url}/login/google`, { token })
       .pipe(
-        tap( ( resp: any ) => {
-           console.log(resp)
-          localStorage.setItem( 'token', resp.token )
+        tap((resp: any) => {
+          console.log(resp)
+
+        this.guardarLocalStorage( resp.token, resp.menu );
+
         })
       )
   }
 
-  cargarUsuarios( desde: number = 0 ){
+  cargarUsuarios(desde: number = 0) {
     // Ruta de la peticion http para cargar usuarios
 
-    const url = `${base_url }/usuarios?desde=${desde}`;
-    return this.http.get<CargarUsuario>( url, this.headers )
-               .pipe(
-                 map( resp => {
-                  const usuarios = resp.usuarios.map(
-                      user => new Usuario( user.nombre, user.email, '', user.img, user.google, user.role, user.uid )
-                    );
-                    return {
-                      total: resp.total,
-                      usuarios
-                    };
-                  })
-                )
+    const url = `${base_url}/usuarios?desde=${desde}`;
+    return this.http.get<CargarUsuario>(url, this.headers)
+      .pipe(
+        map(resp => {
+          const usuarios = resp.usuarios.map(
+            user => new Usuario(user.nombre, user.email, '', user.img, user.google, user.role, user.uid)
+          );
+          return {
+            total: resp.total,
+            usuarios
+          };
+        })
+      )
   }
 
-  eliminarUsuario( usuario: Usuario ){
+  eliminarUsuario(usuario: Usuario) {
     // Ruta de la peticion http para eliminar usuarios
-    const url = `${ base_url }/usuarios/${ usuario.uid }`;
-    return this.http.delete( url, this.headers );
+    const url = `${base_url}/usuarios/${usuario.uid}`;
+    return this.http.delete(url, this.headers);
 
 
   }
 
-  guardarUsuario( usuario: Usuario ){
+  guardarUsuario(usuario: Usuario) {
 
-    return this.http.put(`${ base_url }/usuarios/${ usuario.uid }`, usuario, {
+    return this.http.put(`${base_url}/usuarios/${usuario.uid}`, usuario, {
       headers: {
-      'x-token': this.token
+        'x-token': this.token
       }
     });
 
