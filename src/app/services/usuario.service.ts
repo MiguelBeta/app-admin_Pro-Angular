@@ -39,8 +39,13 @@ export class UsuarioService {
     // this.googleInit();
   }
 
+
   get token(): string {
     return localStorage.getItem('token') || '';
+  }
+
+  get role(): 'ADMIN_ROLE' | 'USER_ROLE' {
+    return this.usuario?.role || 'USER_ROLE';
   }
 
   get uid(): string {
