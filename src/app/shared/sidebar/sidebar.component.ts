@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SidebarService } from '../../services/sidebar.service';
 import { UsuarioService } from '../../services/usuario.service';
 import { Usuario } from '../../models/usuario.model';
@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   templateUrl: './sidebar.component.html',
   styles: ``
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
 
   // public menuItems: any[];
   public usuario?: Usuario;
@@ -23,12 +23,13 @@ export class SidebarComponent {
     // this.menuItems = sidebarService.menu;
     this.usuario = usuarioService.usuario;
   }
+  ngOnInit(): void {
+    // Llama al método cargarMenu() al iniciar el componente
+    this.sidebarService.cargarMenu();
+    // Obtiene el usuario actual
+    this.usuario = this.usuarioService.usuario;
 
-  toggleSubMenu( item: any ): void {
-    item.expanded = !item.expanded;
   }
 
-  navigateTo(url: string): void {
-    this.router.navigateByUrl(url);
-  }
+
 }
